@@ -1,0 +1,27 @@
+{
+  "name": "config.js",
+  "version": "0.0.1",
+  "description": "Lightweight Node.js configuration with enough feature.",
+  "main": "./src/config.js",
+  "scripts": {
+    "pretest": "eslint src",
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cnwangjie/config.js.git"
+  },
+  "keywords": [
+    "config",
+    "light"
+  ],
+  "author": "cnwangjie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cnwangjie/config.js/issues"
+  },
+  "homepage": "https://github.com/cnwangjie/config.js#readme",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
+}
