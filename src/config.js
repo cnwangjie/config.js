@@ -6,8 +6,13 @@ let __separator = '.'
 
 function Config(key, defaultValue) {
   if (!(this instanceof Config)) {
-    return new Config(key, defaultValue)
+    const inst = new Config(key, defaultValue)
+    if (key)
+      return inst.get(key, defaultValue)
+    else
+      return proxyAttributions(inst)
   }
+
   Object.defineProperties(this, {
     separator: {
       get() {
@@ -18,10 +23,6 @@ function Config(key, defaultValue) {
       }
     }
   })
-  if (key)
-    return this.get(key, defaultValue)
-  else
-    return this
 }
 
 Config.prototype.load = function load(toLoadFilePath, resolver) {
@@ -35,20 +36,20 @@ Config.prototype.load = function load(toLoadFilePath, resolver) {
   } else {
     const type = path.extname(filePath)
     switch (type) {
-    case 'json':
+    case '.json':
       resolvedData = JSON.parse(configFileContent)
       break
-    case 'js':
+    case '.js':
       resolvedData = require(filePath)
       break
-    case 'yaml':
-    case 'yml':
+    case '.yaml':
+    case '.yml':
       resolvedData = require('js-yaml').safeLoad(configFileContent)
       break
-    case 'env':
+    case '.env':
       resolvedData = require('dotenv').parse(configFileContent)
       break
-    case 'toml':
+    case '.toml':
       resolvedData = require('toml').parse(configFileContent)
       break
     default:
@@ -95,22 +96,30 @@ Config.prototype.set = function set(key, value) {
   obj[props.shift()] = value
 }
 
-Config.prototype.args = function args({args, transform = true}) {
+Config.prototype.args = function args(opt = {}) {
+  const args = opt.args
+  const transform = opt.transform || true
   let argsList = process.argv
   argsList = argsList.filter(i => /--[^=]+=[^ ]+/.test(i)).reduce((r, i) => {
-    const re = i.match(/--([^=])+=([^ ])+/)
+    const re = i.match(/--([^=]+)+=([^ ]+)+/)
     r[re[1]] = re[2]
+    return r
   }, {})
   for (let key in argsList) {
     let value = argsList[key]
     value = transform ? autoTypeTransform(value) : value
-    if (!Array.isArray(args) || args.indexOf(key) !== -1)
+    if (!Array.isArray(args) || args.indexOf(key) !== -1) {
       this.set(key, value)
+
+    }
   }
   return this
 }
 
-Config.prototype.env = function env({tolower = true, split = true, transform = true}) {
+Config.prototype.env = function env(opt = {}) {
+  const tolower = opt.tolower || true
+  const split = opt.split || true
+  const transform = opt.transform || true
   for (let key in process.env) {
     let value = process.env[key]
     value = transform ? autoTypeTransform(value) : value
@@ -130,11 +139,15 @@ function autoTypeTransform(value) {
   return value
 }
 
-module.exports = new Proxy(Config, {
-  get(target, prop) {
-    if (__data.hasOwnProperty(prop))
-      return Reflect.get(__data, prop)
-    else
-      return Reflect.get(target, prop)
-  },
-})
+function proxyAttributions(obj) {
+  return new Proxy(obj, {
+    get(target, prop) {
+      if (__data.hasOwnProperty(prop))
+        return Reflect.get(__data, prop)
+      else
+        return Reflect.get(target, prop)
+    },
+  })
+}
+
+module.exports = proxyAttributions(Config)
