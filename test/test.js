@@ -1,7 +1,7 @@
 const assert = require('assert')
 const config = require('../src/config.js')
 const fs = require('fs')
-
+/* eslint-env mocha */
 const __config = {
   nt: 'normal text',
   number: 100,

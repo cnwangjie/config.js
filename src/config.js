@@ -98,7 +98,7 @@ Config.prototype.set = function set(key, value) {
 
 Config.prototype.args = function args(opt = {}) {
   const args = opt.args
-  const transform = opt.transform || true
+  const transform = ('transfrom' in opt) ? opt.transform : true
   let argsList = process.argv
   argsList = argsList.filter(i => /--[^=]+=[^ ]+/.test(i)).reduce((r, i) => {
     const re = i.match(/--([^=]+)+=([^ ]+)+/)
@@ -117,9 +117,9 @@ Config.prototype.args = function args(opt = {}) {
 }
 
 Config.prototype.env = function env(opt = {}) {
-  const tolower = opt.tolower || true
-  const split = opt.split || true
-  const transform = opt.transform || true
+  const tolower = ('tolower' in opt) ? opt.tolower : true
+  const split = ('split' in opt) ? opt.split : true
+  const transform = ('transform' in opt) ? opt.transform : true
   for (let key in process.env) {
     let value = process.env[key]
     value = transform ? autoTypeTransform(value) : value
