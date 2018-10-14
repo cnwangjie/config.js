@@ -98,7 +98,7 @@ Config.prototype.set = function set(key, value) {
 
 Config.prototype.args = function args(opt = {}) {
   const args = opt.args
-  const transform = ('transfrom' in opt) ? opt.transform : true
+  const transform = ('transform' in opt) ? opt.transform : true
   let argsList = process.argv
   argsList = argsList.filter(i => /--[^=]+=[^ ]+/.test(i)).reduce((r, i) => {
     const re = i.match(/--([^=]+)+=([^ ]+)+/)
