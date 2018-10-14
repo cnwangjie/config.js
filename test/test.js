@@ -16,7 +16,6 @@ const __config = {
 
 before(() => {
   fs.writeFileSync(__dirname + '/__config.json', JSON.stringify(__config, null, 4))
-
 })
 
 after(() => {
@@ -50,6 +49,10 @@ describe('config.js basic assert', () => {
 
       it('assign resolver', () => {
         assert(config().load('__config.json', JSON.parse))
+      })
+
+      it('should return an proxy', () => {
+        assert(config().load('__config.json').get('nt'), __config.nt)
       })
     })
 
