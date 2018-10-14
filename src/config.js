@@ -57,7 +57,7 @@ Config.prototype.load = function load(toLoadFilePath, resolver) {
     }
   }
   Object.assign(__data, resolvedData)
-  return this
+  return proxyAttributions(this)
 }
 
 function splitKey(key) {
@@ -113,7 +113,7 @@ Config.prototype.args = function args(opt = {}) {
 
     }
   }
-  return this
+  return proxyAttributions(this)
 }
 
 Config.prototype.env = function env(opt = {}) {
@@ -127,7 +127,7 @@ Config.prototype.env = function env(opt = {}) {
     key = split ? key.split('_').join(__separator) : key
     this.set(key, value)
   }
-  return this
+  return proxyAttributions(this)
 }
 
 function autoTypeTransform(value) {
