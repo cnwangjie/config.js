@@ -1,6 +1,6 @@
 /* =================== USAGE ===================
 
-    import * as conf from "@cnwangjie/conf";
+    import conf from "@cnwangjie/conf";
     conf().load("config.json");
 
  =============================================== */
